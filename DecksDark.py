@@ -12,9 +12,10 @@ def diff(m, n):
     if (m == None or n == None):
         return 0
     return (int(n) - int(m))
-def foreachmla(xyz,res,sprintcell,location1,maxrow,mlaVB):
+def foreachmla(xyz,res,m,sprintcell,location1,maxrow,mlaVB):
         for xyrow in range(2, maxrow + 1):
-            if (str(xyz['E' + str(xyrow)].value)) == "VB":
+            print m
+            if (str(xyz['E' + str(xyrow)].value)) == m:
                 muniq = xyz['A' + str(xyrow)].value
                 mlat = xyz['B' + str(xyrow)].value
                 mlng = xyz['C' + str(xyrow)].value
@@ -72,7 +73,6 @@ def doExcelProc(wb,hq,dq):
     for row in range(2, oc_maxrow+1):
         l = []
         v = []
-        mlaVB=[]
         uniq = oc['A' + str(row)].value
         lat = oc['B' + str(row)].value
         lng = oc['C' + str(row)].value
@@ -96,25 +96,12 @@ def doExcelProc(wb,hq,dq):
         res['H' + str(row)].value = minstuff['heightdiff']
         res['G' + str(row)].value = rad
         res['K' + str(row)].value = minstuff['xymla']
-        vb = foreachmla(xyz,res,uniq,location1,xyz_maxrow,mlaVB)
-        res['O' + str(row)].value = vb['mlauniq']
-
-        # elif vb['mlac'] == "ATC":
-        #     vb = foreachmla(xyz,res,uniq,location1,xyz_maxrow,mlaVB)
-        #     res['P' + str(row)].value = vb['mlauniq']
-        #     print "processed",vb['mlac']
-        # elif vb['mlac'] == "SBA":
-        #     vb = foreachmla(xyz,res,uniq,location1,xyz_maxrow)
-        #     res['Q' + str(row)].value = vb['mlauniq']
-        #     print "processed",vb['mlac']
-        # elif vb['mlac'] == "TowerCo":
-        #     vb = foreachmla(xyz,res,uniq,location1,xyz_maxrow)
-        #     res['R' + str(row)].value = vb['mlauniq']
-        #     print "processed",vb['mlac']
-        # elif vb['mlac'] == "Crown Castle":
-        #     vb = foreachmla(xyz,res,uniq,location1,xyz_maxrow)
-        #     res['S' + str(row)].value = vb['mlauniq']
-        #     print "processed",vb['mlac']
+        vb = foreachmla(xyz,res,"VB",uniq,location1,xyz_maxrow,[])
+        res['P' + str(row)].value = vb['mlauniq']
+        pb = foreachmla(xyz,res,"SBA",uniq,location1,xyz_maxrow,[])
+        res['O' + str(row)].value = pb['mlauniq']
+        sb = foreachmla(xyz,res,"TowerCo",uniq,location1,xyz_maxrow,[])
+        res['R' + str(row)].value = sb['mlauniq']
         count = 0
         for z in range(2, oc.max_row + 1):
             if (res['A' + str(z)].value) != None:
@@ -132,30 +119,7 @@ def doExcelProc(wb,hq,dq):
                 res['J' + str(i)].value = "Doesn't meet criteria"
 
 
-    wb.save('SampleTest.xlsx')
-    # count = 0
-    # for z in range(2, oc.max_row + 1):
-    #     if (res['A' + str(z)].value) != None:
-    #         count = count + 1
-    #     for i in range(2, count + 2):
-    #         a = str(res.cell(i, 6).value)
-    #         b = str(res.cell(i, 7).value)
-    #         answer = diff(int(a), int(b))
-    #         res['H' + str(i)].value = answer
-    #     for i in range(2, count + 2):
-    #         if ((res['H' + str(i)].value) >= 20):
-    #
-    #             res['I' + str(i)].value = res['A' + str(i)].value
-    #         else:
-    #             res['I' + str(i)].value = "Doesn't meet criteria"
-    #     for i in range(2, count + 2):
-    #         if ((res['E' + str(i)].value) < 1):
-    #             res['J' + str(i)].value = res['A' + str(i)].value
-    #         else:
-    #             res['J' + str(i)].value = "Doesn't meet criteria"
-
-
-
+    wb.save('New6.xlsx')
 def main():
     # import the worksheet
     hquery = input("Enter the query for the RAD center difference  ")
